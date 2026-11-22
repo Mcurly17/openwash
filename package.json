@@ -1,0 +1,17 @@
+{
+  "name": "openwash",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "lint": "cd frontend && npm run lint",
+    "build": "cd frontend && npm run build",
+    "test:frontend": "cd frontend && npm test",
+    "test:scripts": "node --test scripts/*.test.ts",
+    "typecheck:scripts": "tsc -p tsconfig.json",
+    "openwash": "node --env-file-if-exists=.env scripts/openwash.ts"
+  },
+  "devDependencies": {
+    "genlayer-js": "1.1.8",
+    "genlayer": "0.39.2"
+  }
+}

@@ -1,0 +1,14 @@
+SPEC.md
+openwash-spec-*.md
+openwash-prompt-*.md
+.env
+.env.*
+!.env.example
+node_modules/
+.next/
+out/
+.venv/
+.pytest_cache/
+__pycache__/
+*.pyc
+*.tsbuildinfo
