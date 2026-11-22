@@ -1,0 +1,16 @@
+{
+  "id": "mistralai/Mistral-7B-v0.1",
+  "sha": "27d67f1b5f57dc0953326b2601d68371d40ea8da",
+  "gated": false,
+  "cardData": {
+    "license": "apache-2.0"
+  },
+  "siblings": [
+    {
+      "rfilename": "model-00001-of-00002.safetensors"
+    },
+    {
+      "rfilename": "model-00002-of-00002.safetensors"
+    }
+  ]
+}

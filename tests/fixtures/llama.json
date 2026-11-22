@@ -1,0 +1,26 @@
+{
+  "id": "meta-llama/Llama-3.1-8B",
+  "sha": "d04e592bb4f6aa9cfee91e2e20afa771667e1d4b",
+  "gated": "manual",
+  "cardData": {
+    "license": "llama3.1",
+    "extra_gated_prompt": "greater than 700 million monthly active users in the preceding calendar month, you must request a license from Meta"
+  },
+  "siblings": [
+    {
+      "rfilename": "model-00001-of-00004.safetensors"
+    },
+    {
+      "rfilename": "model-00002-of-00004.safetensors"
+    },
+    {
+      "rfilename": "model-00003-of-00004.safetensors"
+    },
+    {
+      "rfilename": "model-00004-of-00004.safetensors"
+    },
+    {
+      "rfilename": "original/consolidated.00.pth"
+    }
+  ]
+}

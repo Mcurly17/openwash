@@ -1,0 +1,32 @@
+{
+  "id": "allenai/OLMo-2-1124-7B",
+  "sha": "7df9a82518afdecae4e8c026b27adccc8c1f0032",
+  "gated": false,
+  "cardData": {
+    "license": "apache-2.0",
+    "datasets": [
+      "allenai/dolmino-mix-1124",
+      "allenai/olmo-mix-1124"
+    ]
+  },
+  "siblings": [
+    {
+      "rfilename": "model-00001-of-00006.safetensors"
+    },
+    {
+      "rfilename": "model-00002-of-00006.safetensors"
+    },
+    {
+      "rfilename": "model-00003-of-00006.safetensors"
+    },
+    {
+      "rfilename": "model-00004-of-00006.safetensors"
+    },
+    {
+      "rfilename": "model-00005-of-00006.safetensors"
+    },
+    {
+      "rfilename": "model-00006-of-00006.safetensors"
+    }
+  ]
+}

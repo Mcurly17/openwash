@@ -4,6 +4,7 @@ import json
 import os
 import sys
 import tempfile
+from pathlib import Path
 
 import pytest
 
@@ -116,5 +117,5 @@ class Scenario:
 def s(direct_vm, direct_deploy, direct_alice, direct_bob):
     direct_vm.warp(START)
     contract = direct_deploy("contracts/open_wash.py", 10)
-    mock_get(direct_vm, URL, "<p>ＤＥＭＯ is <em>open</em>  source</p>")
+    mock_get(direct_vm, URL, (Path(__file__).parents[1] / "fixtures" / "claim.html").read_bytes())
     return Scenario(direct_vm, contract, direct_alice, direct_bob)
