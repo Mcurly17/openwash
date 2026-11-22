@@ -17,5 +17,8 @@
     "genlayer-js": "1.1.8",
     "typescript": "5.9.3",
     "viem": "2.58.4"
-  }
+  },
+  "workspaces": [
+    "frontend"
+  ]
 }

@@ -23,7 +23,7 @@ jobs:
         env:
           NEXT_PUBLIC_CONTRACT_ADDRESS: ${{ vars.NEXT_PUBLIC_CONTRACT_ADDRESS }}
       - run: |
-          cp -r docs/demo frontend/out/demo
+          diff -r docs/demo frontend/out/demo
           touch frontend/out/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:

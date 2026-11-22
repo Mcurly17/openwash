@@ -12,3 +12,6 @@ out/
 __pycache__/
 *.pyc
 *.tsbuildinfo
+
+frontend/public/demo/
+frontend/next-env.d.ts
