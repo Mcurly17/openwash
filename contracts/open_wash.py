@@ -75,7 +75,12 @@ def _quote_read(url, quote):
                 "sha256": hashlib.sha256(body).hexdigest()}
 
     def validate(result: gl.vm.Result) -> bool:
-        return isinstance(result, gl.vm.Return) and result.calldata == read()
+        if not isinstance(result, gl.vm.Return) or not isinstance(result.calldata, dict):
+            return False
+        leader, mine = result.calldata, read()
+        return (isinstance(leader.get("sha256"), str) and re.fullmatch(r"[a-f0-9]{64}", leader["sha256"]) is not None
+                and all(type(leader.get(k)) is type(mine[k]) and leader[k] == mine[k]
+                        for k in ("status", "url", "match")))
 
     return gl.vm.run_nondet_unsafe(read, validate)
 

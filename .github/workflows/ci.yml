@@ -1,0 +1,56 @@
+name: CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONIOENCODING: utf-8
+      NEXT_PUBLIC_CONTRACT_ADDRESS: "0x0000000000000000000000000000000000000001"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: python -m pip install -r requirements-dev.txt
+      - run: genvm-lint check contracts/open_wash.py
+      - run: python -m pytest tests/direct -v
+      - run: npm ci --no-audit --no-fund
+      - run: npm run typecheck:scripts
+      - run: npm run test:scripts
+      - run: npm run lint
+      - run: npm run test:frontend
+      - run: npm run build
+      - name: Check artifact and release history
+        shell: bash
+        run: |
+          set -eu
+          test "$(wc -c < contracts/open_wash.py)" -lt 40000
+          diff -r docs/demo frontend/out/demo
+          test -f frontend/out/claim/index.html
+          python - <<'PY'
+          import re
+          import subprocess
+          def git(*args):
+              return subprocess.check_output(["git", *args], text=True)
+          messages = git("log", "--format=%B")
+          forbidden = r"co-authored|[c]odex|[o]penai|[c]hatgpt|[c]laude|generated|[a]nthropic|[c]opilot|[c]ursor"
+          assert not re.search(forbidden, messages, re.I)
+          identity = "Mcurly17 <9095525+Mcurly17@users.noreply.github.com>"
+          assert git("log", "-1", "--format=%an <%ae>%n%cn <%ce>").splitlines() == [identity, identity]
+          hits = git("grep", "-n", "-i", "-E", "-e", "[p]rivate_key|--[p]rivate-key").splitlines()
+          assert len(hits) == 2
+          assert any(line.startswith("scripts/value.test.ts:") for line in hits)
+          assert any(line.startswith("scripts/value.ts:") and "Refused signing options" in line for line in hits)
+          PY
+          git log -1 --format=fuller

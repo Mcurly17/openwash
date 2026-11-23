@@ -18,15 +18,12 @@ CARDS = {
 }
 
 
-def arrange(s, model="olmo", criteria=("PASS", "PASS", "PASS"), edits=None, card=None):
+def sources(s, model, criteria, edits=None, card=None):
     metadata = json.loads((FIXTURES / (model + ".json")).read_text())
     if edits:
         metadata.update(edits)
     repo, sha = metadata["id"], metadata["sha"]
     blob = json.dumps(metadata)
-    s.pledge()
-    s.register(repo, sha)
-    s.challenge()
     mock_get(s.vm, f"https://huggingface.co/api/models/{repo}/revision/{sha}", blob)
     base = f"https://huggingface.co/{repo}"
     readme = CARDS[model] if card is None else card
@@ -39,7 +36,16 @@ def arrange(s, model="olmo", criteria=("PASS", "PASS", "PASS"), edits=None, card
         mock_get(s.vm, f"{base}/raw/{sha}/LICENSE", "Entry not found", 404)
     if model == "olmo":
         mock_get(s.vm, "https://api.github.com/repos/allenai/OLMo", '{"license":{"spdx_id":"Apache-2.0"}}')
-    s.vm.mock_llm("UNTRUSTED_SOURCES_JSON", json.dumps(dict(zip(("c1", "c3", "c4"), criteria))))
+    selector = {"olmo": "allenai/OLMo", "mistral": "Mistral 7B", "llama": "LLAMA 3.1 COMMUNITY LICENSE"}
+    s.vm.mock_llm(selector[model], json.dumps(dict(zip(("c1", "c3", "c4"), criteria))))
+    return repo, sha, blob
+
+
+def arrange(s, model="olmo", criteria=("PASS", "PASS", "PASS"), edits=None, card=None):
+    repo, sha, blob = sources(s, model, criteria, edits, card)
+    s.pledge()
+    s.register(repo, sha)
+    s.challenge()
     return blob
 
 
@@ -92,9 +98,10 @@ def test_observed_source_routes_and_hashes(s, model, criteria, grade):
 ])
 def test_bad_pin_refunds_without_prompt(s, body, status):
     s.pledge()
-    s.register()
+    pin = "deadbeef" * 5 if status == 404 else "a" * 40
+    s.register(sha=pin)
     s.challenge()
-    mock_get(s.vm, "https://huggingface.co/api/models/org/demo/revision/" + "a"*40, body, status)
+    mock_get(s.vm, "https://huggingface.co/api/models/org/demo/revision/" + pin, body, status)
     assert s.call("resolve", (0,)) == "EVIDENCE_NOT_FOUND"
     c = json.loads(s.c.get_claim(0))
     assert c["last_grade"] == "" and not c["c2_pass"]
@@ -154,3 +161,30 @@ def test_malformed_prompt_result_preserves_open_challenge(s):
         s.call("resolve", (0,))
     assert json.loads(s.c.get_challenge(0))["status"] == "OPEN"
     s.solvent()
+
+
+def test_two_upheld_demo_leaves_only_challenger_funded(s):
+    from .test_open_wash_flow import refused
+
+    s.pledge()
+    for model, grades, minutes in (
+        ("llama", ("FAIL", "UNCLEAR", "UNCLEAR"), 15),
+        ("olmo", ("PASS", "PASS", "PASS"), 10),
+        ("mistral", ("PASS", "FAIL", "FAIL"), 10),
+    ):
+        repo, sha, _ = sources(s, model, grades)
+        s.register(repo, sha, minutes)
+    refused(s.c.preview_close(s.a, 0), lambda: s.call("close_pledge", (0,)), "12:15:00Z")
+    for claim_id, challenge_id, grade in ((0, 0, "RESTRICTED"), (2, 1, "OPEN_WEIGHTS_ONLY")):
+        assert s.challenge(claim_id) == challenge_id
+        assert s.call("resolve", (challenge_id,)) == "UPHELD"
+        assert json.loads(s.c.get_claim(claim_id))["last_grade"] == grade
+    assert s.call("grade_claim", (1,)) == "OPEN"
+    s.vm.warp(UNTIL)
+    refused(s.c.preview_challenge(s.b, 1, "0"), lambda: s.call("challenge", (1,), s.bob), "period ended")
+    assert s.c.claim_status(1) == "CLOSED"
+    s.vm.warp("2026-11-22T12:15:00Z")
+    assert s.call("close_pledge", (0,)) == 0
+    assert json.loads(s.c.get_credit(s.a))["credit"] == "0"
+    assert s.call("withdraw", sender=s.bob) == BOND + 2 * STAKE
+    assert json.loads(s.c.get_stats())["total_credits"] == "0"

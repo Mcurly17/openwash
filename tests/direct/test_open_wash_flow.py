@@ -130,3 +130,12 @@ def test_close_without_claims_and_refuse_later_top_up(s):
     s.pledge()
     assert s.call("close_pledge", (0,)) == BOND
     refused(s.c.preview_top_up(s.a, 0, "1"), lambda: s.call("top_up", (0,), value=1), "closed")
+
+
+def test_quote_consensus_keeps_leader_digest_and_compares_decision(s):
+    s.pledge()
+    s.register()
+    leader = dict(s.vm._captured_validators[-1][0])
+    assert s.vm.run_validator(leader_result={**leader, "sha256": "b" * 64})
+    assert not s.vm.run_validator(leader_result={**leader, "match": False})
+    assert not s.vm.run_validator(leader_result={**leader, "sha256": "invalid"})
