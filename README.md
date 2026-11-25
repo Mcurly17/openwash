@@ -2,7 +2,9 @@
 
 OpenWash puts a GEN bond behind a publisher’s claim that a particular model revision is open source. Anyone except the publisher can stake a challenge during the claim window. GenLayer validators examine the pinned evidence. The contract computes the grade and settles the bond.
 
-**Live demo** · Studionet deployment pending. The [evidence ledger](docs/evidence.md) will hold the address, receipts, actual grades and observed refusals. The frontend displays this pending state until a real contract address is configured.
+**[Live demo on Studionet](https://mcurly17.github.io/openwash/)** · [Contract 0x5F8325BB720F249Cc76BB9d21e014bb36CfE62f7](https://explorer-studio.genlayer.com/address/0x5F8325BB720F249Cc76BB9d21e014bb36CfE62f7). The [evidence ledger](docs/evidence.md) records every transaction hash, source fingerprint, refusal and balance.
+
+Deployment: [0x3c34d0497da548503770a8b789bdf1a5213ed3eaf106592a5645dcfcc33d775d](https://explorer-studio.genlayer.com/tx/0x3c34d0497da548503770a8b789bdf1a5213ed3eaf106592a5645dcfcc33d775d). Mistral resolution: [0x1d16022a85d435a1d71af80b0de8c4242fcebf2e576b630ebd8017a8e827bde7](https://explorer-studio.genlayer.com/tx/0x1d16022a85d435a1d71af80b0de8c4242fcebf2e576b630ebd8017a8e827bde7). Challenger withdrawal: [0x44c1e05305bfce03e42beee38959e8dcde449cc154793aa08ebca62b12d8c377](https://explorer-studio.genlayer.com/tx/0x44c1e05305bfce03e42beee38959e8dcde449cc154793aa08ebca62b12d8c377).
 
 ## Review the project
 
@@ -22,15 +24,15 @@ OpenWash puts a GEN bond behind a publisher’s claim that a particular model re
 
 > OPENWASH_OSAID_GRADE. A publisher may declare that a named AI model, pinned to a Hugging Face repo id and a 40-character revision SHA, is OPEN. OPEN requires all four fixed criteria: (C1) the license imposes no extra restriction of use, field, user-cap or acceptable-use policy beyond a standard OSI-approved software license; (C2) model weights are publicly listed and the Hugging Face API reports the repo as not gated, at that exact revision; (C3) training code is publicly available under an OSI-approved license; (C4) training-data information is detailed enough that a skilled person could, in principle, recreate a substantially equivalent system using the same or similar data (OSAID 1.0). If C2 and C1 hold but C3 or C4 fail, the grade is OPEN_WEIGHTS_ONLY. If C1 or C2 fail, the grade is RESTRICTED. A challenge against a declared OPEN claim is UPHELD when the computed grade is not OPEN. This is a technical grade, not legal advice and not an official OSAID or AI Act certification. Article 53(2) of Regulation (EU) 2024/1689 is cited only as context for why public weights and an unrestricted license matter.
 
-## Demo cases
+## Studionet results · 23 November 2026
 
-| Claim | Recorded source observation on 22 Nov 2026 | Expected demonstration |
+| Bonded claim | Agreed grade | Observed outcome |
 |---|---|---|
-| A · Llama 3.1 8B | Manual gate, listed shards, Llama 3.1 commercial terms | RESTRICTED, challenge upheld |
-| B · OLMo 2 7B | Public weights, Apache-2.0 metadata, linked code and two named datasets | OPEN candidate. Record the actual grade. Show CLOSED at the deadline |
-| C · Mistral 7B v0.1 | Ungated Apache-2.0 weights, short card without training or data details | OPEN_WEIGHTS_ONLY, challenge upheld |
+| [A · Llama 3.1 8B](https://mcurly17.github.io/openwash/claim/?id=0) | Undetermined | Validators disagreed. Challenge 0 remains open with 0.1 GEN reserved and a 0.01 GEN stake. |
+| [B · OLMo 2 7B](https://mcurly17.github.io/openwash/claim/?id=1) | OPEN | All four criteria passed. A late challenge was refused and the window returned CLOSED. |
+| [C · Mistral 7B v0.1](https://mcurly17.github.io/openwash/claim/?id=2) | OPEN_WEIGHTS_ONLY | Challenge 1 was upheld. The challenger withdrew 0.11 GEN, including the returned stake. |
 
-A quotes Meta’s announcement. B and C use statements by the demo publisher. Read the current API immediately before registration and pin its returned SHA. The reduced fixtures preserve source fields observed on the date above. The local tests use controlled semantic answers.
+A quotes Meta’s announcement. B and C use the demo publisher’s statements. The final close preview refused because A was unresolved. Both accounts had zero withdrawal credit after the challenger withdrew.
 
 ## Run locally
 
