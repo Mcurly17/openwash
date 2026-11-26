@@ -1,6 +1,6 @@
 # Studionet evidence · v1.0.0
 
-Session on 23 November 2026, chain 61999. [Live register](https://mcurly17.github.io/openwash/) · [Contract 0x5F8325BB720F249Cc76BB9d21e014bb36CfE62f7](https://explorer-studio.genlayer.com/address/0x5F8325BB720F249Cc76BB9d21e014bb36CfE62f7)
+Demo and settlement on 23–26 November 2026, chain 61999. [Live register](https://mcurly17.github.io/openwash/) · [Contract 0x5F8325BB720F249Cc76BB9d21e014bb36CfE62f7](https://explorer-studio.genlayer.com/address/0x5F8325BB720F249Cc76BB9d21e014bb36CfE62f7)
 
 Publisher timbre-a: `0xf5Fe96d62733d40f25822b20C5E46A0E17483dFF`. Challenger timbre-b: `0x74115084812fc662AaAE47B5Fd4Ef60cd5E7BC56`.
 
@@ -8,11 +8,11 @@ Publisher timbre-a: `0xf5Fe96d62733d40f25822b20C5E46A0E17483dFF`. Challenger tim
 
 | Claim | Agreed grade | Outcome | C1 | C2 | C3 | C4 |
 |---|---|---|---|---|---|---|
-| A · Llama 3.1 8B | Undetermined | Challenge 0 remains OPEN | — | — | — | — |
+| A · Llama 3.1 8B | Undetermined | Challenge 0 EXPIRED, claim 0 CLOSED | — | — | — | — |
 | B · OLMo 2 7B | OPEN | Assessed without settlement | PASS | PASS | PASS | PASS |
 | C · Mistral 7B v0.1 | OPEN_WEIGHTS_ONLY | Challenge 1 UPHELD, claim DEBUNKED | PASS | PASS | FAIL | FAIL |
 
-For A, the leader proposed UPHELD with a RESTRICTED grade. The resolution returned MAJORITY_DISAGREE. The claim has no adopted grade and the reserve remains locked. The original resolution was submitted once.
+For A, the leader proposed UPHELD with a RESTRICTED grade. The first resolution returned MAJORITY_DISAGREE. On 25 November, a second submission reverted at the consensus contract with FeesDistributionMissing before validators voted. After the deadline, expiration settled the funds. The claim closed without an adopted grade.
 
 ## Registration evidence
 
@@ -98,18 +98,32 @@ The table preserves the status observed by the operator when advancing to the ne
 | 10 | Grade B | [0xe44b35c604bc1f336b6b9b58a33e54d89d75294dbf9672e615c6fb177b388c99](https://explorer-studio.genlayer.com/tx/0xe44b35c604bc1f336b6b9b58a33e54d89d75294dbf9672e615c6fb177b388c99) | ACCEPTED / MAJORITY_AGREE / SUCCESS | OPEN |
 | 11 | Late challenge B | [0x67f603dfe4b2d75278930e1a87ba9a50b7d93a2475cc9ee7b005322702f32e91](https://explorer-studio.genlayer.com/tx/0x67f603dfe4b2d75278930e1a87ba9a50b7d93a2475cc9ee7b005322702f32e91) | ACCEPTED / MAJORITY_AGREE / ERROR | [EXPECTED] challenge period ended (2026-11-23T09:13:39Z) |
 | 12 | Withdraw challenger credit | [0x44c1e05305bfce03e42beee38959e8dcde449cc154793aa08ebca62b12d8c377](https://explorer-studio.genlayer.com/tx/0x44c1e05305bfce03e42beee38959e8dcde449cc154793aa08ebca62b12d8c377) | ACCEPTED / MAJORITY_AGREE / SUCCESS | 0.11 GEN |
+| 25 Nov | Second resolve A | [0x2832b5d80b682b9feee4e5f287fece5b88459ce639932d91d9904f511bb17c5e](https://explorer-studio.genlayer.com/tx/0x2832b5d80b682b9feee4e5f287fece5b88459ce639932d91d9904f511bb17c5e) | EVM reverted (0x0) | FeesDistributionMissing, before validator execution |
+| 26 Nov | Expire challenge 0 | [0x325a0f9ee3430092a314e5f2f720debffcb5bef54de92b646bfadd3a53311a07](https://explorer-studio.genlayer.com/tx/0x325a0f9ee3430092a314e5f2f720debffcb5bef54de92b646bfadd3a53311a07) | FINALIZED / MAJORITY_AGREE / SUCCESS | EXPIRED |
+| 26 Nov | Close pledge 0 | [0xee7a604f70f4ed4aad46b79407a9ec2a590298edc0923a24954e3573ab263fa8](https://explorer-studio.genlayer.com/tx/0xee7a604f70f4ed4aad46b79407a9ec2a590298edc0923a24954e3573ab263fa8) | FINALIZED / MAJORITY_AGREE / SUCCESS | 0.10 GEN credited to timbre-a |
+| 26 Nov | Withdraw publisher credit | [0x3c2a4645527a8b5994dc6001c02b8a1f2c841e4802c70fdc30b49624399753fc](https://explorer-studio.genlayer.com/tx/0x3c2a4645527a8b5994dc6001c02b8a1f2c841e4802c70fdc30b49624399753fc) | FINALIZED / MAJORITY_AGREE / SUCCESS | 0.10 GEN |
+| 26 Nov | Withdraw refunded challenger stake | [0x061f34c98af1cbb1fbb4bdaa9f50e65a4efb4369163977d2b2bc98d1d3b62ce7](https://explorer-studio.genlayer.com/tx/0x061f34c98af1cbb1fbb4bdaa9f50e65a4efb4369163977d2b2bc98d1d3b62ce7) | ACCEPTED / MAJORITY_AGREE / SUCCESS | 0.01 GEN |
 
 ## Closing and withdrawal
 
 The late challenge carried zero value. After the refusal, claim B returned `CLOSED` with grade `OPEN` and deadline 2026-11-23T09:13:39Z.
 
-After `locked_until` (2026-11-23T09:18:28Z), the final close preview returned `[EXPECTED] a challenge is still open on this pledge`. The operator did not submit a closing transaction. Challenge 0 remains OPEN with a resolution deadline of 2026-11-26T09:04:34Z.
+On 23 November, after `locked_until` (2026-11-23T09:18:28Z), the close preview returned `[EXPECTED] a challenge is still open on this pledge`. Challenge 0 was still OPEN when the challenger withdrew the 0.11 GEN payout and returned stake from C.
 
-| Balance in GEN | Before withdrawal | After withdrawal |
+| Balance in GEN on 23 November | Before withdrawal | After withdrawal |
 |---|---:|---:|
 | Publisher credit | 0 | 0 |
 | Challenger credit | 0.11 | 0 |
 | Available bond | 0 | 0 |
 | Reserved bond | 0.1 | 0.1 |
 
-The C payout and returned stake funded the challenger withdrawal. The remaining 0.1 GEN reserve and 0.01 GEN stake belong to unresolved challenge A. The publisher had zero credit. No publisher withdrawal or expiry transaction was submitted.
+On 26 November, after the resolution deadline of 09:04:34 UTC, timbre-a called `expire(0)`. Challenge 0 returned `EXPIRED` with reason `resolution deadline reached`. Claim 0 returned `CLOSED` with an empty grade. The owner then closed pledge 0. The table shows the contract balances after each operation.
+
+| Balance in GEN on 26 November | After expiration | After closure | After timbre-a withdrew | After timbre-b withdrew |
+|---|---:|---:|---:|---:|
+| Publisher credit | 0 | 0.10 | 0 | 0 |
+| Challenger credit | 0.01 | 0.01 | 0.01 | 0 |
+| Available bond | 0.10 | 0 | 0 | 0 |
+| Reserved bond | 0 | 0 | 0 | 0 |
+
+Final reads confirmed pledge 0 was inactive and both credits were zero. The CLI confirmed both accounts were locked.

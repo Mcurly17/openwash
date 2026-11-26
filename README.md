@@ -24,15 +24,17 @@ Deployment: [0x3c34d0497da548503770a8b789bdf1a5213ed3eaf106592a5645dcfcc33d775d]
 
 > OPENWASH_OSAID_GRADE. A publisher may declare that a named AI model, pinned to a Hugging Face repo id and a 40-character revision SHA, is OPEN. OPEN requires all four fixed criteria: (C1) the license imposes no extra restriction of use, field, user-cap or acceptable-use policy beyond a standard OSI-approved software license; (C2) model weights are publicly listed and the Hugging Face API reports the repo as not gated, at that exact revision; (C3) training code is publicly available under an OSI-approved license; (C4) training-data information is detailed enough that a skilled person could, in principle, recreate a substantially equivalent system using the same or similar data (OSAID 1.0). If C2 and C1 hold but C3 or C4 fail, the grade is OPEN_WEIGHTS_ONLY. If C1 or C2 fail, the grade is RESTRICTED. A challenge against a declared OPEN claim is UPHELD when the computed grade is not OPEN. This is a technical grade, not legal advice and not an official OSAID or AI Act certification. Article 53(2) of Regulation (EU) 2024/1689 is cited only as context for why public weights and an unrestricted license matter.
 
-## Studionet results · 23 November 2026
+## Studionet results · 23–26 November 2026
 
 | Bonded claim | Agreed grade | Observed outcome |
 |---|---|---|
-| [A · Llama 3.1 8B](https://mcurly17.github.io/openwash/claim/?id=0) | Undetermined | Validators disagreed. Challenge 0 remains open with 0.1 GEN reserved and a 0.01 GEN stake. |
+| [A · Llama 3.1 8B](https://mcurly17.github.io/openwash/claim/?id=0) | Undetermined | Challenge 0 expired (`EXPIRED`) after the resolution deadline. Claim 0 is `CLOSED` with no adopted grade. |
 | [B · OLMo 2 7B](https://mcurly17.github.io/openwash/claim/?id=1) | OPEN | All four criteria passed. A late challenge was refused and the window returned CLOSED. |
 | [C · Mistral 7B v0.1](https://mcurly17.github.io/openwash/claim/?id=2) | OPEN_WEIGHTS_ONLY | Challenge 1 was upheld. The challenger withdrew 0.11 GEN, including the returned stake. |
 
-A quotes Meta’s announcement. B and C use the demo publisher’s statements. The final close preview refused because A was unresolved. Both accounts had zero withdrawal credit after the challenger withdrew.
+A quotes Meta’s announcement. B and C use the demo publisher’s statements. The second attempt to resolve A reverted before validators voted. [Reverted transaction](https://explorer-studio.genlayer.com/tx/0x2832b5d80b682b9feee4e5f287fece5b88459ce639932d91d9904f511bb17c5e).
+
+On 26 November, expiration returned the 0.01 GEN stake to timbre-b’s credit and released the 0.10 GEN reserve. Closing pledge 0 credited that bond to timbre-a. Both accounts withdrew their credits. The pledge is inactive, with zero bond, reserve and outstanding credit. [Expiration](https://explorer-studio.genlayer.com/tx/0x325a0f9ee3430092a314e5f2f720debffcb5bef54de92b646bfadd3a53311a07) · [Closure](https://explorer-studio.genlayer.com/tx/0xee7a604f70f4ed4aad46b79407a9ec2a590298edc0923a24954e3573ab263fa8) · [Publisher withdrawal](https://explorer-studio.genlayer.com/tx/0x3c2a4645527a8b5994dc6001c02b8a1f2c841e4802c70fdc30b49624399753fc) · [Challenger stake withdrawal](https://explorer-studio.genlayer.com/tx/0x061f34c98af1cbb1fbb4bdaa9f50e65a4efb4369163977d2b2bc98d1d3b62ce7).
 
 ## Run locally
 
